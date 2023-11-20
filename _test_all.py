@@ -10,7 +10,7 @@ logger = logging.getLogger("test-downloader-api")
 
 logger.info(sys.version.replace("\n", " "))
 if os.path.exists(base_dir):
-    logger.warning("REMOVE {}".format(base_dir))
+    logger.warning(f"REMOVE {base_dir}")
     shutil.rmtree(base_dir)
 
 info = api.info()
@@ -18,7 +18,7 @@ info = api.info()
 logger.info("Test models")
 failed_models = []
 for idx, model_name in enumerate(info["models"]):
-    logger.info("{} ({} of {})".format(model_name, idx + 1, len(info["models"])))
+    logger.info(f'{model_name} ({idx + 1} of {len(info["models"])})')
 
     try:
         logger.info(api.load(model_name).most_similar("who"))
@@ -27,13 +27,13 @@ for idx, model_name in enumerate(info["models"]):
         failed_models.append(model_name)
 
 if failed_models:
-    logger.critical("FAILED MODELS: {}".format(", ".join(failed_models)))
+    logger.critical(f'FAILED MODELS: {", ".join(failed_models)}')
 
 logger.info("#" * 25)
 logger.info("Test datasets")
 failed_datasets = []
 for idx, dataset_name in enumerate(info["corpora"]):
-    logger.info("{} ({} of {})".format(dataset_name, idx + 1, len(info["corpora"])))
+    logger.info(f'{dataset_name} ({idx + 1} of {len(info["corpora"])})')
     try:
         res = sum(1 for _ in api.load(dataset_name))
         if res == 0:
@@ -44,7 +44,7 @@ for idx, dataset_name in enumerate(info["corpora"]):
         failed_datasets.append(dataset_name)
 
 if failed_datasets:
-    logger.critical("FAILED DATASETS: {}".format(", ".join(failed_datasets)))
+    logger.critical(f'FAILED DATASETS: {", ".join(failed_datasets)}')
 
 logger.info("#" * 25)
 if len(failed_datasets + failed_models) == 0:
@@ -53,6 +53,6 @@ if len(failed_datasets + failed_models) == 0:
 else:
 
     logger.critical("FIX THIS:")
-    logger.critical("Models: {}".format(", ".join(failed_models)))
-    logger.critical("Datasets: {}".format(", ".join(failed_datasets)))
+    logger.critical(f'Models: {", ".join(failed_models)}')
+    logger.critical(f'Datasets: {", ".join(failed_datasets)}')
 logger.info("#" * 25)
